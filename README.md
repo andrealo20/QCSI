@@ -1,5 +1,13 @@
 # qcsi
 
+[![ci](https://github.com/andrealo20/qcsi/actions/workflows/ci.yml/badge.svg)](https://github.com/andrealo20/qcsi/actions/workflows/ci.yml)
+[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![language: C99](https://img.shields.io/badge/language-C99-00599C.svg)](https://en.wikipedia.org/wiki/C99)
+[![tests: 43](https://img.shields.io/badge/tests-43%20passing-brightgreen.svg)](tests/)
+[![sanitizers: ASan + UBSan](https://img.shields.io/badge/sanitizers-ASan%20%2B%20UBSan-brightgreen.svg)](.github/workflows/ci.yml)
+[![no malloc](https://img.shields.io/badge/allocation-none-informational.svg)](#api)
+[![depends on qdsp](https://img.shields.io/badge/depends%20on-qdsp-c2410c.svg)](https://github.com/andrealo20/qdsp)
+
 **Wi-Fi CSI sensing on a microcontroller, in fixed point.**
 
 Built on [qdsp](https://github.com/andrealo20/qdsp), which supplies the
