@@ -1,0 +1,70 @@
+name: ci
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    name: ${{ matrix.os }} / ${{ matrix.cc }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        cc: [gcc, clang]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure
+        env:
+          CC: ${{ matrix.cc }}
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DQCSI_WERROR=ON
+
+      - name: Build
+        run: cmake --build build --parallel
+
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+
+  sanitizers:
+    name: ubsan + asan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Signed integer overflow is UB: on a fixed-point library UBSan is the
+      # single most useful check there is.
+      - name: Configure with sanitizers
+        env:
+          CC: clang
+          CFLAGS: -fsanitize=address,undefined -fno-sanitize-recover=all -g
+        run: cmake -S . -B build-san -DCMAKE_BUILD_TYPE=Debug
+
+      - name: Build
+        run: cmake --build build-san --parallel
+
+      - name: Test
+        run: ctest --test-dir build-san --output-on-failure
+
+
+  cost:
+    name: cost report
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Operation counts are deterministic: a change between two commits is a
+      # cost regression, not measurement noise.
+      - name: Configure
+        run: >
+          cmake -S . -B build-bench -DCMAKE_BUILD_TYPE=Release
+          -DQCSI_PROFILE=ON -DQCSI_BUILD_TESTS=OFF
+
+      - name: Build
+        run: cmake --build build-bench --parallel
+
+      - name: Run
+        run: ./build-bench/bench/qcsi_bench | tee -a "$GITHUB_STEP_SUMMARY"

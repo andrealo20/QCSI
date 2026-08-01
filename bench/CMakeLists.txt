@@ -1,0 +1,6 @@
+add_executable(qcsi_bench bench_pipeline.c)
+target_link_libraries(qcsi_bench PRIVATE qcsi)
+if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
+    target_compile_options(qcsi_bench PRIVATE -Wall -Wextra)
+    target_link_libraries(qcsi_bench PRIVATE m)
+endif()
