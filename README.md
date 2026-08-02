@@ -83,7 +83,7 @@ $$\angle\left(H_a[k] \, \overline{H_b[k]}\right) = \phi^{\text{phys}}_a[k] - \ph
 One complex multiply, no estimation step, nothing to tune. That identity is
 the core of the library.
 
-### It holds — but only for one antenna pair
+### It holds - but only for one antenna pair
 
 ![Reduction by antenna pair](docs/images/antenna_pairs.png)
 
